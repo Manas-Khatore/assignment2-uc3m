@@ -1,81 +1,8 @@
-CREATE TABLE VARIETAL_ROW_NUM AS 
-SELECT varietal, country, 
-       ROW_NUMBER() OVER (PARTITION BY country ORDER BY COUNT(*) DESC) AS row_number 
-FROM REFERENCES 
-INNER JOIN PRODUCTS ON PRODUCTS.product = REFERENCES.product 
-INNER JOIN CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode 
-WHERE EXTRACT(YEAR FROM orderdate) = 2023
-GROUP BY country, varietal;
-
-
-
-
-/* concatenating all the orders together */
-
 /* translate all of these into single queries */
-
-CREATE TABLE ALL_ORDERS AS 
-       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity, country FROM CLIENT_LINES 
-       UNION ALL 
-       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity, dliv_country as country from LINES_ANONYM;
 
 /* Query for Bestsellers Geographic Report */
 
-/* figuring out the most ordered varietal per country */
-
-CREATE TABLE VARIETAL_ROW_NUM AS 
-SELECT varietal, country, 
-       ROW_NUMBER() OVER (PARTITION BY country ORDER BY COUNT(*) DESC) AS row_number 
-FROM REFERENCES 
-INNER JOIN PRODUCTS ON PRODUCTS.product = REFERENCES.product 
-INNER JOIN CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode 
-WHERE EXTRACT(YEAR FROM orderdate) = 2023
-GROUP BY country, varietal;
-
 /* FINAL QUERY -- translate to relational algebra */
-
-WITH VARIETAL_ROW_NUM AS (
-    SELECT 
-        PRODUCTS.varietal, 
-        CLIENT_LINES.country, 
-        ROW_NUMBER() OVER (PARTITION BY CLIENT_LINES.country ORDER BY COUNT(*) DESC) AS row_number 
-    FROM 
-        REFERENCES 
-    INNER JOIN 
-        PRODUCTS ON PRODUCTS.product = REFERENCES.product 
-    INNER JOIN 
-        CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode 
-    WHERE 
-        EXTRACT(YEAR FROM orderdate) = 2023
-    GROUP BY 
-        CLIENT_LINES.country, PRODUCTS.varietal
-)
-SELECT 
-    PRODUCTS.varietal, 
-    CLIENT_LINES.country, 
-    PRODUCTS.product, 
-    COUNT(*) as num_buyers, 
-    SUM(CLIENT_LINES.quantity) as num_units, 
-    SUM(CLIENT_LINES.quantity * CLIENT_LINES.price) as income, 
-    AVG(CLIENT_LINES.quantity) 
-FROM 
-    REFERENCES 
-INNER JOIN 
-    PRODUCTS ON PRODUCTS.product = REFERENCES.product 
-INNER JOIN 
-    CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode  
-INNER JOIN 
-    VARIETAL_ROW_NUM ON PRODUCTS.varietal = VARIETAL_ROW_NUM.varietal 
-    AND CLIENT_LINES.country = VARIETAL_ROW_NUM.country 
-WHERE 
-    EXTRACT(YEAR FROM orderdate) = 2023 
-    AND VARIETAL_ROW_NUM.row_number = 1 
-GROUP BY 
-    PRODUCTS.varietal, 
-    CLIENT_LINES.country, 
-    PRODUCTS.product;
-
-
 
 WITH ALL_ORDERS AS (
     SELECT 
