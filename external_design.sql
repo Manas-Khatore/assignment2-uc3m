@@ -1,5 +1,4 @@
-CREATE OR REPLACE PACKAGE user_package AS
-    current_user VARCHAR2(30)
-END user_package;
+/* use USER function provided by SQL */
 
-CREATE VIEW 
+CREATE VIEW my_purchases AS 
+SELECT * FROM ORDERS_CLIENTS WHERE ORDERS_CLIENTS.username = (SELECT USER FROM DUAL);
