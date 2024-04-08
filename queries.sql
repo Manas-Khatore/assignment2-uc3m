@@ -84,7 +84,7 @@ GROUP BY PRODUCTS.varietal, CLIENT_LINES.country, PRODUCTS.product;
 
 /* figuring out the most ordered item per month */ 
 
-CREATE TABLE REF_MONTH_ROW_NUM AS 
+/* CREATE TABLE REF_MONTH_ROW_NUM AS 
 SELECT REFERENCES.barcode, 
        EXTRACT(MONTH FROM ALL_ORDERS.orderdate) as month, 
        ROW_NUMBER() OVER (PARTITION BY EXTRACT(MONTH FROM ALL_ORDERS.orderdate) ORDER BY SUM(ALL_ORDERS.quantity) DESC) AS row_number 
