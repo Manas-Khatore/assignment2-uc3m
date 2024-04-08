@@ -64,7 +64,7 @@ GROUP BY
     PRODUCTS.product;
 
 
-WITH (SELECT PRODUCTS.varietal, CLIENT_LINES.country, 
+/* WITH (SELECT PRODUCTS.varietal, CLIENT_LINES.country, 
        ROW_NUMBER() OVER (PARTITION BY country ORDER BY COUNT(*) DESC) AS row_number 
        FROM REFERENCES 
        INNER JOIN PRODUCTS ON PRODUCTS.product = REFERENCES.product 
@@ -115,7 +115,7 @@ GROUP BY REFERENCES.barcode, EXTRACT(MONTH FROM ALL_ORDERS.orderdate)) AND
        WHERE ALL_ORDERS.orderdate >= ADD_MONTHS(TRUNC(SYSDATE), -12) AND row_number = 1 
        GROUP BY REFERENCES.barcode, EXTRACT(MONTH FROM ALL_ORDERS.orderdate);
 
-
+*/
 
 
 
