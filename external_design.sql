@@ -15,10 +15,18 @@ CREATE VIEW my_posts AS
 SELECT * FROM POSTS WHERE POSTS.username = (SELECT USER FROM DUAL);
 
 CREATE OR REPLACE TRIGGER insert_new_posts 
-AFTER INSERT ON POSTS 
+  AFTER INSERT ON POSTS 
+  FOR EACH ROW 
+  BEGIN 
+  INSERT INTO POSTS 
+  VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes); 
+END;
+
+CREATE OR REPLACE TRIGGER delete_posts 
+BEFORE DELETE ON POSTS 
 FOR EACH ROW 
 BEGIN 
-  INSERT INTO POSTS 
-  VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes);
+DELETE FROM POSTS 
+WHERE :OLD.likes = 0; 
 END;
 
