@@ -14,6 +14,21 @@ WHERE CLIENTS.username = (SELECT USER FROM DUAL);
 CREATE VIEW my_posts AS 
 SELECT * FROM POSTS WHERE POSTS.username = (SELECT USER FROM DUAL);
 
+/* triggers aren't running? creates new lines whenever I try running them */
+
+CREATE TABLE OLD_POSTS (
+  username   VARCHAR2(30),
+  postdate   DATE,
+  barCode    CHAR(15),
+  product    VARCHAR2(50) NOT NULL,
+  score      NUMBER(1) NOT NULL, 
+  title      VARCHAR2(50),
+  text       VARCHAR2(2000) NOT NULL, 
+  likes      NUMBER(9) DEFAULT(0) NOT NULL, 
+  endorsed   DATE, 
+  action_taken     VARCHAR2(50)
+);
+
 CREATE OR REPLACE TRIGGER insert_new_posts 
   AFTER INSERT ON POSTS 
   FOR EACH ROW 
@@ -26,7 +41,16 @@ CREATE OR REPLACE TRIGGER delete_posts
 BEFORE DELETE ON POSTS 
 FOR EACH ROW 
 BEGIN 
-DELETE FROM POSTS 
-WHERE :OLD.likes = 0; 
+  IF :OLD.LIKES = 0 THEN 
+  INSERT INTO OLD_POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed, action_taken) 
+  VALUES (:OLD.username, :OLD.postdate, :OLD.barCode, :OLD.product, :OLD.score, :OLD.title, :OLD.text, :OLD.likes, :OLD.endorsed, 'DELETE'); 
+END IF; 
 END;
 
+CREATE OR REPLACE TRIGGER update_text 
+BEFORE UPDATE OF text on POSTS 
+FOR EACH ROW 
+BEGIN 
+IF :OLD.likes = 0 
+:OLD.text = :NEW.text;
+END;
