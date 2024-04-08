@@ -1,4 +1,13 @@
+/* concatenating all the orders together */ 
+
+CREATE TABLE ALL_ORDERS AS 
+       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity FROM CLIENT_LINES 
+       UNION ALL 
+       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity from LINES_ANONYM;
+
 /* Query for Bestsellers Geographic Report */
+
+/* figuring out the most ordered varietal per country */
 
 CREATE TABLE VARIETAL_ROW_NUM AS 
 SELECT varietal, country, 
@@ -9,6 +18,8 @@ INNER JOIN CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode
 WHERE EXTRACT(YEAR FROM orderdate) = 2023
 GROUP BY country, varietal;
 
+/* FINAL QUERY -- translate to relational algebra */
+
 SELECT PRODUCTS.varietal, CLIENT_LINES.country, PRODUCTS.product, COUNT(*) as num_buyers, SUM(CLIENT_LINES.quantity) as num_units, SUM(CLIENT_LINES.quantity * CLIENT_LINES.price) as income, AVG(CLIENT_LINES.quantity) FROM REFERENCES 
 INNER JOIN PRODUCTS ON PRODUCTS.product = REFERENCES.product 
 INNER JOIN CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode  
@@ -17,13 +28,6 @@ WHERE EXTRACT(YEAR from orderdate) = 2023 and VARIETAL_ROW_NUM.row_number = 1
 GROUP BY PRODUCTS.varietal, CLIENT_LINES.country, PRODUCTS.product;
 
 /* Query for Business way of life */
-
-/* concatenating all the orders together */ 
-
-CREATE TABLE ALL_ORDERS AS 
-       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity FROM CLIENT_LINES 
-       UNION ALL 
-       SELECT barcode, orderdate, price, TO_CHAR(quantity) as quantity from LINES_ANONYM;
 
 /* figuring out the most ordered item per month */ 
 
