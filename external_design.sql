@@ -27,13 +27,13 @@ CREATE TABLE OLD_POSTS (
   action_taken     VARCHAR2(50)
 );
 
-/* errors */
+/* created */
 
 CREATE OR REPLACE TRIGGER insert_new_posts 
   AFTER INSERT ON POSTS 
   FOR EACH ROW 
   BEGIN 
-  INSERT INTO POSTS 
+  INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes) 
   VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes); 
 END;
 
