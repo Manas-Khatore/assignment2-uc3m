@@ -14,8 +14,6 @@ WHERE CLIENTS.username = (SELECT USER FROM DUAL);
 CREATE VIEW my_posts AS 
 SELECT * FROM POSTS WHERE POSTS.username = (SELECT USER FROM DUAL);
 
-/* triggers aren't running? creates new lines whenever I try running them */
-
 CREATE TABLE OLD_POSTS (
   username   VARCHAR2(30),
   postdate   DATE,
@@ -29,6 +27,8 @@ CREATE TABLE OLD_POSTS (
   action_taken     VARCHAR2(50)
 );
 
+/* errors */
+
 CREATE OR REPLACE TRIGGER insert_new_posts 
   AFTER INSERT ON POSTS 
   FOR EACH ROW 
@@ -36,6 +36,8 @@ CREATE OR REPLACE TRIGGER insert_new_posts
   INSERT INTO POSTS 
   VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes); 
 END;
+
+/* created */
 
 CREATE OR REPLACE TRIGGER delete_posts 
 BEFORE DELETE ON POSTS 
@@ -46,6 +48,8 @@ BEGIN
   VALUES (:OLD.username, :OLD.postdate, :OLD.barCode, :OLD.product, :OLD.score, :OLD.title, :OLD.text, :OLD.likes, :OLD.endorsed, 'DELETE'); 
 END IF; 
 END;
+
+/* errors */
 
 CREATE OR REPLACE TRIGGER update_text 
 BEFORE UPDATE OF text on POSTS 
