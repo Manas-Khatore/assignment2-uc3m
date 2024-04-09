@@ -14,7 +14,7 @@ INSERT INTO Replacements (taxID, barCode, orderdate, status, units, deldate, pay
 VALUES ('J91536748Z', 
         'OIQ01481I324621', 
         TO_DATE('2024-04-10', 'YYYY-MM-DD'), 
-        'D', 
+        'F', 
         3, 
-        NULL,
+        TO_DATE('2024-04-15', 'YYYY-MM-DD'),
         30.75);
