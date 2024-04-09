@@ -49,12 +49,12 @@ BEGIN
 END IF; 
 END;
 
-/* errors */
+/* created */
 
 CREATE OR REPLACE TRIGGER update_text 
 BEFORE UPDATE OF text on POSTS 
 FOR EACH ROW 
 BEGIN 
-IF :OLD.likes = 0 
-:OLD.text = :NEW.text;
+  UPDATE POSTS set text = :NEW.text 
+  WHERE text = :OLD.text;
 END;
