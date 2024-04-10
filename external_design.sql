@@ -41,13 +41,14 @@ CREATE OR REPLACE TRIGGER insert_new_posts
   VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes); 
 END;
 
+DECLARE EXCEPTION cannot_delete dbms_output.put_line('This post has more than zero likes, cannot delete!');
+
 CREATE OR REPLACE TRIGGER delete_posts 
-BEFORE DELETE ON POSTS 
-FOR EACH ROW 
+  BEFORE DELETE ON POSTS 
+  FOR EACH ROW 
 BEGIN 
-  IF :OLD.LIKES = 0 THEN 
-  INSERT INTO OLD_POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed, action_taken) 
-  VALUES (:OLD.username, :OLD.postdate, :OLD.barCode, :OLD.product, :OLD.score, :OLD.title, :OLD.text, :OLD.likes, :OLD.endorsed, 'DELETE'); 
+  IF :OLD.LIKES > 0 THEN 
+   RAISE_APPLICATION_ERROR(-20001, 'Cannot delete the post because it more than zero likes.'); 
 END IF; 
 END;
 
@@ -78,3 +79,11 @@ VALUES ('FSDB253', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'QQO41416Q877187', 'Char
 
 INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed) 
 VALUES ('FSDB253', TO_DATE('2022-04-11', 'YYYY-MM-DD'), 'OOI21363Q853914', 'Cestero', 1, 'Bad product', 'Not good!', 0, TO_DATE('2022-04-11', 'YYYY-MM-DD'));
+
+DELETE FROM POSTS WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-10', 'YYYY-MM-DD');
+
+DELETE FROM POSTS WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-11', 'YYYY-MM-DD');
+
+
+INSERT INTO OLD_POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed, action_taken) 
+  VALUES (:OLD.username, :OLD.postdate, :OLD.barCode, :OLD.product, :OLD.score, :OLD.title, :OLD.text, :OLD.likes, :OLD.endorsed, 'DELETE'); 
