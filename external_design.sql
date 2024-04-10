@@ -1,5 +1,3 @@
-/* use USER function provided by SQL, is it supposed to have a different value? */
-
 CREATE VIEW my_purchases AS 
 SELECT * FROM ORDERS_CLIENTS WHERE ORDERS_CLIENTS.username = (SELECT USER FROM DUAL);
 
@@ -35,8 +33,6 @@ CREATE TABLE OLD_POSTS (
   action_taken     VARCHAR2(50)
 );
 
-/* created */
-
 CREATE OR REPLACE TRIGGER insert_new_posts 
   AFTER INSERT ON POSTS 
   FOR EACH ROW 
@@ -44,8 +40,6 @@ CREATE OR REPLACE TRIGGER insert_new_posts
   INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes) 
   VALUES (:NEW.username, :NEW.postdate, :NEW.barCode, :NEW.product, :NEW.score, :NEW.title, :NEW.text, :NEW.likes); 
 END;
-
-/* created */
 
 CREATE OR REPLACE TRIGGER delete_posts 
 BEFORE DELETE ON POSTS 
@@ -57,8 +51,6 @@ BEGIN
 END IF; 
 END;
 
-/* created */
-
 CREATE OR REPLACE TRIGGER update_text 
 BEFORE UPDATE OF text on POSTS 
 FOR EACH ROW 
@@ -66,3 +58,14 @@ BEGIN
   UPDATE POSTS set text = :NEW.text 
   WHERE text = :OLD.text;
 END;
+
+/* TESTS */
+
+INSERT INTO CLIENTS (username, reg_datetime, user_passw, name, surn1, surn2, email, mobile, preference, voucher, voucher_exp) 
+  VALUES ('FSDB253', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'hello', 'manas', 'khatore', 'hello', 'abc@gmail.com', 805905040, 'SMS', 34, TO_DATE('2022-04-10', 'YYYY-MM-DD'));
+
+INSERT INTO CLIENT_ADDRESSES (username, waytype, wayname, gate, block, stairw, floor, door, ZIP, town, country) 
+  VALUES ('FSDB253', 'avenue', 'hello', 'fsd', 'd', 'd', 'd', 'df', '39402', 'Madrid', 'Spain');
+
+INSERT INTO ORDERS_CLIENTS (orderdate, username, town, country, dliv_datetime, bill_town, bill_country, discount) 
+VALUES (TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'FSDB253', 'Madrid', 'Spain', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'Madrid', 'Spain', 45);
