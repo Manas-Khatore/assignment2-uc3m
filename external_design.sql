@@ -20,19 +20,6 @@ WHERE CLIENTS.username = (SELECT USER FROM DUAL);
 CREATE VIEW my_posts AS 
 SELECT * FROM POSTS WHERE POSTS.username = (SELECT USER FROM DUAL);
 
-CREATE TABLE OLD_POSTS (
-  username   VARCHAR2(30),
-  postdate   DATE,
-  barCode    CHAR(15),
-  product    VARCHAR2(50) NOT NULL,
-  score      NUMBER(1) NOT NULL, 
-  title      VARCHAR2(50),
-  text       VARCHAR2(2000) NOT NULL, 
-  likes      NUMBER(9) DEFAULT(0) NOT NULL, 
-  endorsed   DATE, 
-  action_taken     VARCHAR2(50)
-);
-
 CREATE OR REPLACE TRIGGER insert_new_posts 
   INSTEAD OF INSERT ON my_posts 
   FOR EACH ROW 
@@ -53,11 +40,12 @@ END IF;
 END;
 
 CREATE OR REPLACE TRIGGER update_text 
-BEFORE UPDATE OF text on POSTS 
-FOR EACH ROW 
+  BEFORE UPDATE OF text on POSTS 
+  FOR EACH ROW 
 BEGIN 
-  UPDATE POSTS set text = :NEW.text 
-  WHERE text = :OLD.text;
+  IF :OLD.LIKES > 0 THEN 
+  RAISE_APPLICATION_ERROR(-20001, 'Cannot update the post text because it more than zero likes.'); 
+END IF;
 END;
 
 /* TESTS */
@@ -84,6 +72,7 @@ DELETE FROM POSTS WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-10'
 
 DELETE FROM POSTS WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-11', 'YYYY-MM-DD');
 
+UPDATE POSTS SET text = 'new text (should not work)' WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-10', 'YYYY-MM-DD');
 
-INSERT INTO OLD_POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed, action_taken) 
-  VALUES (:OLD.username, :OLD.postdate, :OLD.barCode, :OLD.product, :OLD.score, :OLD.title, :OLD.text, :OLD.likes, :OLD.endorsed, 'DELETE'); 
+UPDATE POSTS SET text = 'new text (should work)' WHERE username = 'FSDB253' AND postdate = TO_DATE('2022-04-11', 'YYYY-MM-DD');
+
