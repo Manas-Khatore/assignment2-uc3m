@@ -34,7 +34,7 @@ CREATE TABLE OLD_POSTS (
 );
 
 CREATE OR REPLACE TRIGGER insert_new_posts 
-  AFTER INSERT ON POSTS 
+  INSTEAD OF INSERT ON my_posts 
   FOR EACH ROW 
   BEGIN 
   INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes) 
@@ -72,3 +72,9 @@ INSERT INTO CLIENT_CARDS (cardnum, username, card_comp, card_holder, card_expir)
 
 INSERT INTO ORDERS_CLIENTS (orderdate, username, town, country, dliv_datetime, bill_town, bill_country, discount) 
 VALUES (TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'FSDB253', 'Madrid', 'Spain', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'Madrid', 'Spain', 45);
+
+INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed) 
+VALUES ('FSDB253', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'QQO41416Q877187', 'Charca', 4, 'Good product', 'Loved this!', 2, TO_DATE('2022-04-10', 'YYYY-MM-DD'));
+
+INSERT INTO POSTS (username, postdate, barCode, product, score, title, text, likes, endorsed) 
+VALUES ('FSDB253', TO_DATE('2022-04-11', 'YYYY-MM-DD'), 'OOI21363Q853914', 'Cestero', 1, 'Bad product', 'Not good!', 0, TO_DATE('2022-04-11', 'YYYY-MM-DD'));
