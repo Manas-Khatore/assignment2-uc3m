@@ -67,5 +67,8 @@ INSERT INTO CLIENTS (username, reg_datetime, user_passw, name, surn1, surn2, ema
 INSERT INTO CLIENT_ADDRESSES (username, waytype, wayname, gate, block, stairw, floor, door, ZIP, town, country) 
   VALUES ('FSDB253', 'avenue', 'hello', 'fsd', 'd', 'd', 'd', 'df', '39402', 'Madrid', 'Spain');
 
+INSERT INTO CLIENT_CARDS (cardnum, username, card_comp, card_holder, card_expir) 
+  VALUES (38920392, 'FSDB253', 'amex', 'manas', TO_DATE('2022-04-10', 'YYYY-MM-DD'));
+
 INSERT INTO ORDERS_CLIENTS (orderdate, username, town, country, dliv_datetime, bill_town, bill_country, discount) 
 VALUES (TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'FSDB253', 'Madrid', 'Spain', TO_DATE('2022-04-10', 'YYYY-MM-DD'), 'Madrid', 'Spain', 45);
