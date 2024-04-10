@@ -43,9 +43,9 @@ SELECT
     ALL_ORDERS.country, 
     PRODUCTS.product, 
     COUNT(*) as num_buyers, 
-    SUM(ALL_ORDERS.quantity) as num_units, 
+    SUM(ALL_ORDERS.quantity) as num_units_sold, 
     SUM(ALL_ORDERS.quantity * ALL_ORDERS.price) as income, 
-    AVG(ALL_ORDERS.quantity) 
+    AVG(ALL_ORDERS.quantity) as avg_units_sold
 FROM 
     REFERENCES 
 INNER JOIN 
