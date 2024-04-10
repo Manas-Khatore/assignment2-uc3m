@@ -40,27 +40,27 @@ WITH ALL_ORDERS AS (
 )
 SELECT 
     PRODUCTS.varietal, 
-    CLIENT_LINES.country, 
+    ALL_ORDERS.country, 
     PRODUCTS.product, 
     COUNT(*) as num_buyers, 
-    SUM(CLIENT_LINES.quantity) as num_units, 
-    SUM(CLIENT_LINES.quantity * CLIENT_LINES.price) as income, 
-    AVG(CLIENT_LINES.quantity) 
+    SUM(ALL_ORDERS.quantity) as num_units, 
+    SUM(ALL_ORDERS.quantity * ALL_ORDERS.price) as income, 
+    AVG(ALL_ORDERS.quantity) 
 FROM 
     REFERENCES 
 INNER JOIN 
     PRODUCTS ON PRODUCTS.product = REFERENCES.product 
 INNER JOIN 
-    CLIENT_LINES ON CLIENT_LINES.barcode = REFERENCES.barcode  
+    ALL_ORDERS ON ALL_ORDERS.barcode = REFERENCES.barcode  
 INNER JOIN 
     VARIETAL_ROW_NUM ON PRODUCTS.varietal = VARIETAL_ROW_NUM.varietal 
-    AND CLIENT_LINES.country = VARIETAL_ROW_NUM.country 
+    AND ALL_ORDERS.country = VARIETAL_ROW_NUM.country 
 WHERE 
     EXTRACT(YEAR FROM orderdate) = 2023 
     AND VARIETAL_ROW_NUM.row_number = 1 
 GROUP BY 
     PRODUCTS.varietal, 
-    CLIENT_LINES.country, 
+    ALL_ORDERS.country, 
     PRODUCTS.product;
 
 
