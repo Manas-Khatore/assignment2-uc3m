@@ -4,21 +4,23 @@
 CREATE OR REPLACE TRIGGER attribute_endorsed
 BEFORE INSERT OR UPDATE ON Posts
 FOR EACH ROW
+DECLARE
+    v_purchased CHAR(1);
 BEGIN
-    IF : NEW.product IN (
-          SELECT product
-          FROM References
-          WHERE barCode IN (
-              SELECT barCode
-              FROM Supply_Lines
-              WHERE taxID = :NEW.username
-          )
-      ) THEN
-          :NEW.endorsed := SYSDATE; 
-      ELSE 
-          :NEW.endorsed := null;
-      END IF;
+    SELECT 'Y'
+    INTO v_purchased
+    FROM Client_Lines cl
+    JOIN Orders_Clients oc ON cl.username = oc.username AND cl.orderdate = oc.orderdate
+    WHERE cl.barcode = :NEW.barCode
+      AND oc.username = :NEW.username
+      AND ROWNUM = 1; 
+
+    :NEW.endorsed := 'Y';
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        :NEW.endorsed := 'N';
 END;
+
 
 -- this is the trigger for part b
 
