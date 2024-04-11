@@ -51,6 +51,28 @@ END;
 
 -- this is the trigger for part c
 
+CREATE OR REPLACE TRIGGER repeats
+BEFORE INSERT ON Lines_Anonym
+FOR EACH ROW
+DECLARE
+  c_exist NUMBER;
+BEGIN
+    
+  IF UPPER(:NEW.pay_type) = 'CREDIT CARD' THEN
+    SELECT COUNT(*)
+    INTO c_exist
+    FROM Client_Cards
+    WHERE cardnum = :NEW.card_num;
+
+    IF v_exists > 0 THEN
+      RAISE_APPLICATION_ERROR(-20001, 'Invalid Credit Card');
+    END IF;
+  END IF;
+EXCEPTION
+  WHEN OTHERS THEN
+    RAISE;
+END;
+
 
 -- this is the trigger for part d
 
