@@ -83,7 +83,7 @@ END;
 
 -- this is the trigger for part d
 
-CREATE OR REPLACE TRIGGER update_stocks_after_purchase
+CREATE OR REPLACE TRIGGER update_stock
 AFTER INSERT ON Client_Lines
 FOR EACH ROW
 DECLARE
