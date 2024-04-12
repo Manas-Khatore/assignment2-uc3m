@@ -91,7 +91,24 @@ EXCEPTION
     RAISE;
 END;
 
-/* tests */
+/* test case 1 */
+
+INSERT INTO Client_Cards (cardnum, username, card_comp, card_holder, card_expir) VALUES (1234567890123456, 'user1', 'Visa', 'User', TO_DATE('31-DEC-2025', 'DD-MON-YYYY'));
+INSERT INTO Lines_Anonym (orderdate, contact, dliv_town, dliv_country, barcode, price, quantity, pay_type, card_num) VALUES (SYSDATE, 'user1@example.com', 'Town', 
+    'Country', '12345', 19.99, 2, 'CREDIT CARD', 1234567890123456);
+SELECT * FROM Lines_Anonym WHERE contact = 'user1@example.com';
+
+
+/* test case 2 */
+BEGIN
+  INSERT INTO Lines_Anonym (orderdate, contact, dliv_town, dliv_country, barcode, price, quantity, pay_type, card_num) VALUES (SYSDATE, 'user2@example.com', 
+    'Town', 'Country', '12345', 19.99, 1, 'CREDIT CARD', 8389724792204);
+EXCEPTION
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+
+
 
 
 -- this is the trigger for part d
