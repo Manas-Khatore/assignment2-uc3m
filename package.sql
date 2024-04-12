@@ -55,7 +55,6 @@ CREATE OR REPLACE PACKAGE BODY caffeine AS
     AND r.status = 'F'
     AND r.taxID = p_taxID;
 
-    -- Open cursor to fetch details of offers provided by the provider
     OPEN v_ref_cursor FOR
     SELECT r.barCode, 
            r.price AS current_cost,
@@ -77,12 +76,9 @@ CREATE OR REPLACE PACKAGE BODY caffeine AS
 	      GROUP BY sl.barCode, sl.cost
     ) rl ON r.barCode = rl.barCode;
 
-    -- Print statistics
     DBMS_OUTPUT.PUT_LINE('Number of orders placed in the last year: ' || v_total_orders);
     DBMS_OUTPUT.PUT_LINE('Number of orders fulfilled in the last year: ' || v_fulfilled_orders);
     DBMS_OUTPUT.PUT_LINE('Average delivery period for fulfilled offers: ' || v_avg_delivery_period || ' days');
-
-    -- Print details of offers
     DBMS_OUTPUT.PUT_LINE('Details of offers:');
     DBMS_OUTPUT.PUT_LINE('BarCode | Current Cost | Min Cost | Max Cost | Diff Current Avg Cost | Diff Current Best Cost');
     LOOP
