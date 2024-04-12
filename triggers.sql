@@ -52,9 +52,22 @@ BEGIN
 END;
 
 
+/* tests */
+
+BEGIN
+  INSERT INTO Clients (username, user_passw, name) VALUES ('test2', 'password', 'test1');
+  INSERT INTO Orders_Clients (orderdate, username, town, country, dliv_datetime, bill_town, bill_country) VALUES (SYSDATE, 'test2', 'Town', 'Country', SYSDATE, 'Town', 'Country');
+  INSERT INTO Posts (username, postdate, barcode, product, score, title, text) VALUES ('test2', SYSDATE, '12345', 'Test Product', 5, 'Must Try', 'Good purchase!');
+  DELETE FROM Clients WHERE username = 'test2';
+  SELECT * FROM Orders_Anonym;
+  SELECT * FROM AnonyPosts;
+END;
+
+
+
 -- this is the trigger for part c
 
-/* tests */
+
 
 CREATE OR REPLACE TRIGGER repeats
 BEFORE INSERT ON Lines_Anonym
