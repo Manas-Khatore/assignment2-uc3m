@@ -21,6 +21,9 @@ EXCEPTION
         :NEW.endorsed := 'N';
 END;
 
+/* tests */
+
+
 
 -- this is the trigger for part b
 
@@ -51,6 +54,8 @@ END;
 
 -- this is the trigger for part c
 
+/* tests */
+
 CREATE OR REPLACE TRIGGER repeats
 BEFORE INSERT ON Lines_Anonym
 FOR EACH ROW
@@ -73,9 +78,41 @@ EXCEPTION
     RAISE;
 END;
 
+/* tests */
+
 
 -- this is the trigger for part d
 
+CREATE OR REPLACE TRIGGER update_stocks_after_purchase
+AFTER INSERT ON Client_Lines
+FOR EACH ROW
+DECLARE
+    update1 NUMBER;
+BEGIN
+    UPDATE References
+    SET cur_stock = cur_stock - :NEW.quantity
+    WHERE barcode = :NEW.barcode;
+    SELECT cur_stock INTO update1 FROM References WHERE barcode = :NEW.barcode;
+    IF new_stock <= min_stock THEN
+        INSERT INTO Replacements (taxID, barCode, orderdate, status, units, payment)
+        VALUES (
+            'DEFAULT_TAX_ID',
+            :NEW.barcode,
+            SYSDATE,
+            'D', 
+            max_stock - update1,
+            0 
+        );
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error');
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20002, SQLERRM);
+END;
+
+
+/* tests */
 
 
 
