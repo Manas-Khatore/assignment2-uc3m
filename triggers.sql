@@ -23,6 +23,19 @@ END;
 
 /* tests */
 
+-- test case 1
+INSERT INTO Clients (username, user_passw, name) VALUES ('testuser', 'password', 'TestUser');
+INSERT INTO Products (product, coffea, varietal, origin, roast, decaf) VALUES ('Testprod', 'A', 'Arabica', 'Mexico', 'N', 'N');
+INSERT INTO References (barcode, product, format, pack_type, pack_unit, quantity, price) VALUES ('12345', 'Testprod', 'C', 'box', 'units', 10, 15.99);
+INSERT INTO Orders_Clients (orderdate, username, town, country, dliv_datetime, bill_town, bill_country) VALUES (SYSDATE, 'testuser', 'Town', 'Country', SYSDATE, 'Town', 'Country');
+INSERT INTO Client_Lines (orderdate, username, town, country, barcode, price, quantity) VALUES (SYSDATE, 'testuser', 'Town', 'Country', '12345', 15.99, '1');
+
+INSERT INTO Posts (username, postdate, barcode, product, score, title, text) VALUES ('testuser', SYSDATE, '12345', 'Test Product', 5, 'Great Coffee', 'Loved this coffee!');
+
+SELECT endorsed FROM Posts WHERE username = 'testuser' AND barcode = '12345';
+
+
+
 
 
 -- this is the trigger for part b
