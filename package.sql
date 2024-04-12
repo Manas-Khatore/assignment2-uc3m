@@ -88,7 +88,8 @@ CREATE OR REPLACE PACKAGE BODY caffeine AS
     LOOP
         FETCH v_ref_cursor INTO v_ref_code, v_curr_cost, v_min_cost, v_max_cost, v_diff_curr_avg_cost, v_diff_curr_best_cost;
         EXIT WHEN v_ref_cursor%NOTFOUND;
-        DBMS_OUTPUT.PUT_LINE(v_ref_code || ' | ' || v_curr_cost || ' | ' || v_min_cost || ' | ' || v_max_cost || ' | ' || v_diff_curr_avg_cost || ' | ' || v_diff_curr_best_cost);
+        DBMS_OUTPUT.PUT_LINE(v_ref_code || ' | ' || v_curr_cost || ' | ' || v_min_cost || ' | ' || v_max_cost || ' | ' 
+		|| v_diff_curr_avg_cost || ' | ' || v_diff_curr_best_cost);
     END LOOP;
     CLOSE v_ref_cursor;
 
