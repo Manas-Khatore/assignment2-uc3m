@@ -158,4 +158,13 @@ END;
 /* tests */
 
 
+INSERT INTO References (barcode, product, pack_type, pack_unit, quantity, price, cur_stock, min_stock, max_stock) VALUES ('23232', 'Test', 'box', 'units', 10, 10.99, 10, 5, 15);
+
+INSERT INTO Client_Lines (orderdate, username, town, country, barcode, price, quantity) VALUES (SYSDATE, 'user1', 'Town', 'Country', '23232', 10.99, '2');
+
+SELECT cur_stock FROM References WHERE barcode = '23232';
+SELECT * FROM Replacements WHERE barcode = '23232';
+
+
+
 
